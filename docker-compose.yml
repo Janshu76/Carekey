@@ -1,0 +1,14 @@
+services:
+  carelink-api:
+    build:
+      context: ./backend
+    container_name: carelink-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      DATABASE_URL: sqlite:///./carelink.db
+      SECRET_KEY: ${SECRET_KEY:-carelink-dev-only-change-me}
+      CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
