@@ -83,6 +83,18 @@ docker compose up --build
 
 This starts only the API on port `8000`; start the frontend separately as described above.
 
+## Deploy the demo API to Render
+
+The repository includes a [Render Blueprint](./render.yaml) for deploying the backend as a free Python web service. It sets `ENVIRONMENT=development` so the synthetic seed data and mock demo sign-in remain available. **Do not use this public demo deployment for real patient information.**
+
+1. Commit and push the repository, including `render.yaml`, to GitHub.
+2. Sign in to Render and create a **Blueprint** from `https://github.com/Janshu76/Carekey`.
+3. Review the Blueprint resources and start the deploy. Render generates the `SECRET_KEY` value.
+4. When the service is live, open `https://<your-render-service>.onrender.com/health`; a healthy response has `"status":"ok"`. API docs are at `/docs`.
+5. If you host the PWA on a different domain, update the service's `CORS_ORIGINS` environment variable to include that exact HTTPS origin, then redeploy.
+
+This demo Blueprint uses the default SQLite database on the web service's local filesystem. On Render's free service that filesystem is ephemeral: data written after startup can be lost when the instance restarts or redeploys, and the service may spin down while idle. Synthetic seed data is re-created when the API starts. For persistent demo data, configure a PostgreSQL database and install its driver using `backend/requirements-postgres.txt`; verify Render's current database pricing and retention terms before creating a database. This is still not a production medical-record deployment.
+
 ## Try the demo
 
 1. On the PWA sign-in screen, choose **Family guardian** and enter `+91 98990 11223`.
